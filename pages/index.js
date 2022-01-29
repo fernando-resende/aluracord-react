@@ -1,34 +1,10 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
+import React from 'react';
+import { useRouter } from 'next/router';
 import appConfig from '../config.json';
 
-function GlobalStyle() {
-    return (
-        <style global jsx>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          list-style: none;
-        }
-        body {
-          font-family: 'Open Sans', sans-serif;
-          background-color: ${appConfig.theme.colors.primary['500']};
-        }
-        /* App fit Height */ 
-        html, body, #__next {
-          min-height: 100vh;
-          display: flex;
-          flex: 1;
-        }
-        #__next {
-          flex: 1;
-        }
-        #__next > * {
-          flex: 1;
-        }
-        /* ./App fit Height */ 
-      `}</style>
-    );
+function textLengthGreaterThan(text, size) {
+    return text.length > size;
 }
 
 function Title(props) {
@@ -39,118 +15,114 @@ function Title(props) {
             <style jsx>{`
               ${Tag} {
                   color: ${appConfig.theme.colors.neutrals['000']};
-                  font-size: 24px;
-                  font-weight: 600;
+                  font-weight: bold;
+                  padding: 1rem 0;
               }
               `}</style>
         </>
     );
 }
 
-export default function PaginaInicial() {
-    const username = 'fernando-resende';
+export default function Home() {
+    const [userName, setUserName] = React.useState('fernando-resende');
+    const router = useRouter();
+
+    var userImage;
+    var userImgSrc = '../images/nescontroller.png';
+
+    if (textLengthGreaterThan(userName, 2)) {
+        userImgSrc = `https://github.com/${userName}.png`;
+    }
+    userImage =
+        <Image
+            styleSheet={{
+                borderRadius: '50%',
+                position: 'relative',
+                top: '5rem',
+                height: '10rem',
+                border: `5px solid ${appConfig.theme.colors.primary['300']}`,
+            }}
+            src={userImgSrc}
+        />
 
     return (
         <>
-            <GlobalStyle />
             <Box
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     backgroundColor: appConfig.theme.colors.primary[500],
-                    backgroundImage: 'url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)',
-                    backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
+                    backgroundImage: 'url(../images/joystick-seamless.jpg)',
+                    backgroundRepeat: 'repeat', backgroundSize: '30%', backgroundBlendMode: 'multiply',
                 }}
             >
                 <Box
-                    styleSheet={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        flexDirection: {
-                            xs: 'column',
-                            sm: 'row',
-                        },
-                        width: '100%', maxWidth: '700px',
-                        borderRadius: '5px', padding: '32px', margin: '16px',
-                        boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-                        backgroundColor: appConfig.theme.colors.neutrals[700],
-                    }}
+                    styleSheet={{ display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                    flexDirection: 'column',}}
                 >
-                    {/* Formulário */}
-                    <Box
-                        as="form"
-                        styleSheet={{
-                            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                            width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
-                        }}
-                    >
-                        <Title tag="h2">Boas vindas de volta!</Title>
-                        <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
-                            {appConfig.name}
-                        </Text>
-
-                        <TextField
-                            fullWidth
-                            textFieldColors={{
-                                neutral: {
-                                    textColor: appConfig.theme.colors.neutrals[200],
-                                    mainColor: appConfig.theme.colors.neutrals[900],
-                                    mainColorHighlight: appConfig.theme.colors.primary[500],
-                                    backgroundColor: appConfig.theme.colors.neutrals[800],
-                                },
-                            }}
-                        />
-                        <Button
-                            type='submit'
-                            label='Entrar'
-                            fullWidth
-                            buttonColors={{
-                                contrastColor: appConfig.theme.colors.neutrals["000"],
-                                mainColor: appConfig.theme.colors.primary[500],
-                                mainColorLight: appConfig.theme.colors.primary[400],
-                                mainColorStrong: appConfig.theme.colors.primary[600],
-                            }}
-                        />
-                    </Box>
-                    {/* Formulário */}
-
 
                     {/* Photo Area */}
+                    {userImage}
+                    {/* Photo Area */}
+
                     <Box
                         styleSheet={{
                             display: 'flex',
-                            flexDirection: 'column',
                             alignItems: 'center',
-                            maxWidth: '200px',
-                            padding: '16px',
-                            backgroundColor: appConfig.theme.colors.neutrals[800],
-                            border: '1px solid',
-                            borderColor: appConfig.theme.colors.neutrals[999],
-                            borderRadius: '10px',
-                            flex: 1,
-                            minHeight: '240px',
+                            justifyContent: 'space-between',
+                            flexDirection: 'column',
+                            width: '95%', maxWidth: '700px',
+                            borderRadius: '25px', padding: '5rem 1rem 1rem', margin: '16px',
+                            boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
+                            backgroundColor: appConfig.theme.colors.neutrals[700],
                         }}
                     >
-                        <Image
+
+                        {/* Formulário */}
+                        <Box
+                            as="form"
                             styleSheet={{
-                                borderRadius: '50%',
-                                marginBottom: '16px',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                                width: { xs: '100%', sm: '80%' }, textAlign: 'center', marginBottom: '32px',
                             }}
-                            src={`https://github.com/${username}.png`}
-                        />
-                        <Text
-                            variant="body4"
-                            styleSheet={{
-                                color: appConfig.theme.colors.neutrals[200],
-                                backgroundColor: appConfig.theme.colors.neutrals[900],
-                                padding: '3px 10px',
-                                borderRadius: '1000px'
+                            onSubmit={event => {
+                                event.preventDefault();
+                                router.push('/chat');
                             }}
                         >
-                            {username}
-                        </Text>
+                            <Title tag="h3">Boas vindas de volta ao {appConfig.name}!</Title>
+
+                            <TextField
+                                fullWidth
+                                textFieldColors={{
+                                    neutral: {
+                                        textColor: appConfig.theme.colors.neutrals[200],
+                                        mainColor: appConfig.theme.colors.neutrals[900],
+                                        mainColorHighlight: appConfig.theme.colors.primary[500],
+                                        backgroundColor: appConfig.theme.colors.neutrals[800],
+                                    },
+                                }}
+                                value={userName}
+                                onChange={event => setUserName(event.target.value)}
+                            />
+                            <Button
+                                type='submit'
+                                label='Entrar'
+                                fullWidth
+                                buttonColors={{
+                                    contrastColor: appConfig.theme.colors.neutrals["000"],
+                                    mainColor: appConfig.theme.colors.primary[500],
+                                    mainColorLight: appConfig.theme.colors.primary[400],
+                                    mainColorStrong: appConfig.theme.colors.primary[600],
+                                }}
+                                styleSheet={{
+                                    fontFamily: "'Press Start 2P', cursive !important",
+                                }}
+                            />
+                        </Box>
+                        {/* Formulário */}
+
                     </Box>
-                    {/* Photo Area */}
+
                 </Box>
             </Box>
         </>

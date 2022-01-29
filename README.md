@@ -3,6 +3,8 @@ This project was built in the Alura's React immersion (jan/2022).
 
 Este projeto foi construído na imerão React da Alura (jan/2022).
 
+@alura @omariosouto @peas
+
 # Objective / Objetivo
 Create a **Discord's** based chat.
 
