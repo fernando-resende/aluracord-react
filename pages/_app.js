@@ -12,7 +12,11 @@ function GlobalStyle() {
         }
         body {
           font-family: 'Press Start 2P', cursive;
+          line-height:  1.5;
           background-color: ${appConfig.theme.colors.primary['500']};
+        }
+        textarea {
+          line-height:  1.5;
         }
         /* App fit Height */ 
         html, body, #__next {
