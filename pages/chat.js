@@ -1,10 +1,25 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
+import { supabase } from '../src/util/supabaseClient';
+import { useRouter } from 'next/router';
 
 export default function ChatPage() {
+    const userName = useRouter().query.userName;
     const [message, setMessage] = React.useState('');
     const [messageList, setMessageList] = React.useState([]);
+
+    React.useEffect(() => {
+        fetchMessages();
+    }, []);
+
+    async function fetchMessages() {
+        const { data } = await supabase
+            .from('messages')
+            .select('*')
+            .order('id', { ascending: false });
+        setMessageList(data);
+    }
 
     /*
     // Usuário
@@ -17,18 +32,22 @@ export default function ChatPage() {
     - [X] Vamos usar o onChange usa o useState (ter if pra caso seja enter pra limpar a variavel)
     - [X] Lista de mensagens 
     */
-    function handleNovaMensagem(newMessage) {
-        const message = {
-            id: messageList.length + 1,
-            from: 'fernando-resende',
-            text: newMessage,
-        };
 
-        setMessageList([
-            message,
-            ...messageList,
-        ]);
-        setMessage('');
+    function handleNovaMensagem(user, newMessage) {
+        let message = {
+            from: user,
+            message: newMessage,
+        };
+        supabase
+            .from('messages')
+            .insert(message)
+            .then(() => {
+                setMessageList([
+                    message,
+                    ...messageList,
+                ]);
+                setMessage('');
+            });
     }
 
     return (
@@ -37,7 +56,7 @@ export default function ChatPage() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 backgroundColor: appConfig.theme.colors.primary[500],
                 backgroundImage: 'url(../images/joystick-seamless.jpg)',
-                backgroundRepeat: 'repeat', backgroundSize: '30%', backgroundBlendMode: 'multiply',
+                backgroundRepeat: 'repeat', backgroundSize: '20%', backgroundBlendMode: 'multiply',
                 color: appConfig.theme.colors.neutrals['000']
             }}
         >
@@ -86,7 +105,7 @@ export default function ChatPage() {
                             onKeyPress={(event) => {
                                 if (event.key === 'Enter') {
                                     event.preventDefault();
-                                    handleNovaMensagem(message);
+                                    handleNovaMensagem(userName, message);
                                 }
                             }}
                             placeholder="Insira sua mensagem aqui..."
@@ -106,7 +125,7 @@ export default function ChatPage() {
                         <Button
                             label='Enviar'
                             onClick={(event) => {
-                                handleNovaMensagem(message);
+                                handleNovaMensagem(userName, message);
                                 console.log(document.getElementsByTagName('textarea')[0].focus());
                             }}
                         />
@@ -162,7 +181,7 @@ function MessageList(props) {
                             hover: {
                                 backgroundColor: appConfig.theme.colors.neutrals[700],
                             },
-                            
+
                         }}
                     >
                         <Box
@@ -179,7 +198,7 @@ function MessageList(props) {
                                     display: 'inline-block',
                                     marginRight: '8px',
                                 }}
-                                src={`https://github.com/fernando-resende.png`}
+                                src={`https://github.com/${message.from}.png`}
                             />
                             <Text tag="strong" styleSheet={{
                                 display: 'inline-block',
@@ -197,10 +216,10 @@ function MessageList(props) {
                                 }}
                                 tag="span"
                             >
-                                {(new Date().toLocaleString())}
+                                {new Date(message.created_at).toLocaleString()}
                             </Text>
                         </Box>
-                        {message.text}
+                        {message.message}
                     </Text>
                 );
             })}

@@ -52,7 +52,7 @@ export default function Home() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     backgroundColor: appConfig.theme.colors.primary[500],
                     backgroundImage: 'url(../images/joystick-seamless.jpg)',
-                    backgroundRepeat: 'repeat', backgroundSize: '30%', backgroundBlendMode: 'multiply',
+                    backgroundRepeat: 'repeat', backgroundSize: '20%', backgroundBlendMode: 'multiply',
                 }}
             >
                 <Box
@@ -80,13 +80,19 @@ export default function Home() {
                         {/* Formulário */}
                         <Box
                             as="form"
+                            method="post"
                             styleSheet={{
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                                 width: { xs: '100%', sm: '80%' }, textAlign: 'center', marginBottom: '32px',
                             }}
                             onSubmit={event => {
                                 event.preventDefault();
-                                router.push('/chat');
+                                router.push({
+                                    pathname: `/chat`,
+                                    query: {
+                                        userName: userName
+                                    }
+                                });
                             }}
                         >
                             <Title tag="h3">Boas vindas de volta ao {appConfig.name}!</Title>
@@ -112,7 +118,7 @@ export default function Home() {
                                     contrastColor: appConfig.theme.colors.neutrals["000"],
                                     mainColor: appConfig.theme.colors.primary[500],
                                     mainColorLight: appConfig.theme.colors.primary[400],
-                                    mainColorStrong: appConfig.theme.colors.primary[600],
+                                    mainColorStrong: appConfig.theme.colors.primary[700],
                                 }}
                                 styleSheet={{
                                     fontFamily: "'Press Start 2P', cursive !important",
