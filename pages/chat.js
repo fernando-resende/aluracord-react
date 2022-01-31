@@ -2,6 +2,7 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import { supabase } from '../src/util/supabaseClient';
+import { StickerButton } from '../src/components/StickerButton';
 import { useRouter } from 'next/router';
 
 export default function ChatPage() {
@@ -11,6 +12,14 @@ export default function ChatPage() {
 
     React.useEffect(() => {
         fetchMessages();
+        listenRealTimeMessages((newMessage) => {
+            setMessageList((currentListValue) => {
+                return [
+                    newMessage,
+                    ...currentListValue
+                ]
+            })
+        })
     }, []);
 
     async function fetchMessages() {
@@ -21,6 +30,15 @@ export default function ChatPage() {
         setMessageList(data);
     }
 
+    function listenRealTimeMessages(setLiveMessage) {
+        supabase
+            .from('messages')
+            .on('INSERT', (live) => {
+                setLiveMessage(live.new);
+            })
+            .subscribe();
+    }
+    
     /*
     // Usuário
     - Usuário digita no campo textarea
@@ -33,7 +51,7 @@ export default function ChatPage() {
     - [X] Lista de mensagens 
     */
 
-    function handleNovaMensagem(user, newMessage) {
+    function handleNewMessage(user, newMessage) {
         let message = {
             from: user,
             message: newMessage,
@@ -42,10 +60,6 @@ export default function ChatPage() {
             .from('messages')
             .insert(message)
             .then(() => {
-                setMessageList([
-                    message,
-                    ...messageList,
-                ]);
                 setMessage('');
             });
     }
@@ -81,10 +95,12 @@ export default function ChatPage() {
                         display: 'flex',
                         flex: 1,
                         height: '80%',
-                        backgroundColor: appConfig.theme.colors.neutrals[600],
+                        backgroundColor: appConfig.theme.colors.neutrals[900],
                         flexDirection: 'column',
                         borderRadius: '5px',
                         padding: '16px',
+                        backgroundImage: 'url(../images/joystick-seamless.jpg)',
+                        backgroundRepeat: 'repeat', backgroundSize: '10%', backgroundBlendMode: 'multiply',
                     }}
                 >
                     <MessageList messages={messageList} />
@@ -94,6 +110,9 @@ export default function ChatPage() {
                         styleSheet={{
                             display: 'flex',
                             alignItems: 'center',
+                            backgroundColor: appConfig.theme.colors.neutrals[800],
+                            borderRadius: '5px',
+                            padding: '5px'
                         }}
                     >
                         <TextField
@@ -105,7 +124,7 @@ export default function ChatPage() {
                             onKeyPress={(event) => {
                                 if (event.key === 'Enter') {
                                     event.preventDefault();
-                                    handleNovaMensagem(userName, message);
+                                    handleNewMessage(userName, message);
                                 }
                             }}
                             placeholder="Insira sua mensagem aqui..."
@@ -115,18 +134,41 @@ export default function ChatPage() {
                                 border: '0',
                                 resize: 'none',
                                 borderRadius: '5px',
-                                padding: '6px 8px',
-                                backgroundColor: appConfig.theme.colors.neutrals[800],
-                                marginRight: '12px',
+                                padding: '5px',
+                                marginRight: '5px',
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
 
+                        <StickerButton
+                            onStickerClick={(sticker) => {
+                                handleNewMessage(userName, `sticker->${sticker}`);
+                            }}
+                        />
+
                         <Button
-                            label='Enviar'
+                            label=''
+                            iconName='arrowRight'
+                            title='Enviar'
                             onClick={(event) => {
-                                handleNovaMensagem(userName, message);
+                                handleNewMessage(userName, message);
                                 console.log(document.getElementsByTagName('textarea')[0].focus());
+                            }}
+                            styleSheet={{
+                                borderRadius: '50%',
+                                padding: '0 3px 0 0',
+                                marginLeft: '5px',
+                                minWidth: '50px',
+                                minHeight: '50px',
+                                fontSize: '20px',
+                                lineHeight: '0',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: appConfig.theme.colors.neutrals[300],
+                                hover: {
+                                    filter: 'grayscale(0)',
+                                }
                             }}
                         />
                     </Box>
@@ -155,7 +197,7 @@ function Header() {
 }
 
 function MessageList(props) {
-    console.log(props);
+    // console.log(props);
     return (
         <Box
             tag="ul"
@@ -219,7 +261,22 @@ function MessageList(props) {
                                 {new Date(message.created_at).toLocaleString()}
                             </Text>
                         </Box>
-                        {message.message}
+                        {
+                            message.message != undefined ? (
+                                message.message.startsWith('sticker->')
+                                    ? (
+                                        <Image
+                                            src={message.message.replace('sticker->', '')}
+                                            styleSheet={{
+                                                maxHeight: '128px',
+                                            }}
+                                        />
+                                    )
+                                    : (
+                                        message.message
+                                    )
+                            ) : ('')
+                        }
                     </Text>
                 );
             })}

@@ -7,6 +7,8 @@ Este projeto foi construído na imersão React da Alura (jan/2022).
 
 -------------------------------------------------
 
+Link: [https://aluracord-react-sage.vercel.app/](https://aluracord-react-sage.vercel.app/).
+
 [@alura-challenges](https://github.com/alura-challenges) [@omariosouto](https://github.com/omariosouto) [@peas](https://github.com/peas)
 
 # Objective / Objetivo
