@@ -12,11 +12,11 @@ Link: [https://aluracord-react-sage.vercel.app/](https://aluracord-react-sage.ve
 [@alura-challenges](https://github.com/alura-challenges) [@omariosouto](https://github.com/omariosouto) [@peas](https://github.com/peas)
 
 # Objective / Objetivo
-Create a **Discord's** based chat.
+Create a realtime **Discord's** based chat using github users to send messages.
 
 -------------------------------------------------
 
-Criar um chat baseado no **Discord**.
+Criar um chat em tempo real baseado no **Discord** usando usuários do github para enviar mensagens.
 
 # Technologies / Tecnologias
 - HTML;

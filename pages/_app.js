@@ -1,8 +1,8 @@
 import appConfig from '../config.json';
 
 function GlobalStyle() {
-    return (
-        <style global jsx>{`
+  return (
+    <style global jsx>{`
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         * {
           margin: 0;
@@ -14,6 +14,7 @@ function GlobalStyle() {
           font-family: 'Press Start 2P', cursive;
           line-height:  1.5;
           background-color: ${appConfig.theme.colors.primary['500']};
+          display: flex;
         }
         textarea {
           line-height:  1.5;
@@ -34,16 +35,47 @@ function GlobalStyle() {
         .sknui-text{
             font-family: 'Press Start 2P', cursive !important;
         }
+        .flex-col-75{
+          flex: 75% !important;
+        }
+        .flex-col-25{
+          flex: 25% !important;
+        }
+        .my-message{
+          background-color: rgba(200,200,150,0.3);
+          margin: 0 1rem 0 40%;
+        }
+        .other-message{
+          background-color: rgba(150,150,150,0.3);
+          margin-right: 40%;
+        }
+        /* Scroll Bar */
+        /* width */
+        ::-webkit-scrollbar {
+          width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+          background: #BBB;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+          background: #888;
+        }
+
+        /* Scroll Bar */
       `}</style>
-    );
+  );
 }
 
-export default function MyApp({Component, pageProps}){
-    console.log('_app.js default export runing in every page...')
-    return (
-        <>
-        <GlobalStyle/>
-        <Component {...pageProps}/>
-        </>
-    );
+export default function MyApp({ Component, pageProps }) {
+  console.log('_app.js default export runing in every page...')
+  return (
+    <>
+      <GlobalStyle />
+      <Component {...pageProps} />
+    </>
+  );
 }

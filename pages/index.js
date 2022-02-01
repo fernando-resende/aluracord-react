@@ -28,7 +28,7 @@ export default function Home() {
     const router = useRouter();
 
     var userImage;
-    var userImgSrc = '../images/nescontroller.png';
+    var userImgSrc = '../images/avatar/nescontroller.png';
 
     if (textLengthGreaterThan(userName, 2)) {
         userImgSrc = `https://github.com/${userName}.png`;
@@ -38,31 +38,34 @@ export default function Home() {
             styleSheet={{
                 borderRadius: '50%',
                 position: 'relative',
-                top: '5rem',
                 height: '10rem',
-                border: `5px solid ${appConfig.theme.colors.primary['300']}`,
+                border: `5px solid ${appConfig.theme.colors.primary['500']}`,
             }}
             src={userImgSrc}
         />
 
     return (
         <>
-            <Box
-                styleSheet={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    backgroundColor: appConfig.theme.colors.primary[500],
-                    backgroundImage: 'url(../images/joystick-seamless.jpg)',
-                    backgroundRepeat: 'repeat', backgroundSize: '20%', backgroundBlendMode: 'multiply',
-                }}
+            <Box styleSheet={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexDirection: 'column',
+            }}
             >
                 <Box
-                    styleSheet={{ display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                    flexDirection: 'column',}}
+                    styleSheet={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        height: '50%',
+                        width: '100%',
+                        backgroundImage: `url(${appConfig.backgrounds[Math.floor(Math.random() * appConfig.backgrounds.length)].img_url})`,
+                        backgroundRepeat: 'no-repeat', backgroundSize: '100%',
+                    }}
+                />
+                <Box
+                    styleSheet={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        height: '50%',
+                    }}
                 >
-
-                    {/* Photo Area */}
-                    {userImage}
-                    {/* Photo Area */}
 
                     <Box
                         styleSheet={{
@@ -95,7 +98,10 @@ export default function Home() {
                                 });
                             }}
                         >
-                            <Title tag="h3">Boas vindas de volta ao {appConfig.name}!</Title>
+
+                            <Title tag="h1">
+                                Boas vindas de volta ao {appConfig.name}!
+                            </Title>
 
                             <TextField
                                 fullWidth
@@ -126,6 +132,10 @@ export default function Home() {
                             />
                         </Box>
                         {/* Formulário */}
+
+                        {/* Photo Area */}
+                        {userImage}
+                        {/* Photo Area */}
 
                     </Box>
 

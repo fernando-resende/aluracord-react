@@ -67,5 +67,57 @@
       "https://i.pinimg.com/originals/0b/1c/23/0b1c2307c83e1ebdeed72e41b9a058ad.gif",
       "https://c.tenor.com/VylWt5lyjBoAAAAC/omg-yes.gif",
       "https://i.pinimg.com/originals/96/34/c5/9634c520c9a3cd4e7f23190bb2c96500.gif"
+    ],
+    "backgrounds":[
+      {
+        "game": "Alex Kidd",
+        "producer": "",
+        "img_url": "./images/bg/alex-kidd.jpg"
+      },
+      {
+        "game": "Bomber Man",
+        "producer": "",
+        "img_url": "./images/bg/bomber-man.jpg"
+      },
+      {
+        "game": "Sonic the Hedgehog",
+        "producer": "",
+        "img_url": "./images/bg/green_hill_zone.png"
+      },
+      {
+        "game": "Mortal Kombat 2",
+        "producer": "",
+        "img_url": "./images/bg/mortal-kombat-2.jpg"
+      },
+      {
+        "game": "Pac Man",
+        "producer": "",
+        "img_url": "./images/bg/pac-man.png"
+      },
+      {
+        "game": "Pitfall",
+        "producer": "",
+        "img_url": "./images/bg/pitfall.jpg"
+      },
+      {
+        "game": "Resident Evil 3 - Nemesis",
+        "producer": "",
+        "img_url": "./images/bg/resident-evil-3.jpg"
+      },
+      {
+        "game": "Street Fighter",
+        "producer": "",
+        "img_url": "./images/bg/street-fighter-2.jpg"
+      },
+      {
+        "game": "Super Mario World",
+        "producer": "",
+        "img_url": "./images/bg/super-mario-world-1st-stage.jpg"
+      },
+      {
+        "game": "Tony Hawks Pro Skater 2",
+        "producer": "",
+        "img_url": "./images/bg/thps-2-hangar.jpg"
+      }
     ]
   }

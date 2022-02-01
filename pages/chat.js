@@ -38,7 +38,7 @@ export default function ChatPage() {
             })
             .subscribe();
     }
-    
+
     /*
     // Usuário
     - Usuário digita no campo textarea
@@ -69,9 +69,7 @@ export default function ChatPage() {
             styleSheet={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 backgroundColor: appConfig.theme.colors.primary[500],
-                backgroundImage: 'url(../images/joystick-seamless.jpg)',
-                backgroundRepeat: 'repeat', backgroundSize: '20%', backgroundBlendMode: 'multiply',
-                color: appConfig.theme.colors.neutrals['000']
+                color: appConfig.theme.colors.neutrals['000'],
             }}
         >
             <Box
@@ -85,10 +83,11 @@ export default function ChatPage() {
                     height: '100%',
                     maxWidth: '95%',
                     maxHeight: '95vh',
-                    padding: '32px',
+                    padding: '1rem',
                 }}
             >
-                <Header />
+                <Header user={userName} />
+
                 <Box
                     styleSheet={{
                         position: 'relative',
@@ -99,11 +98,11 @@ export default function ChatPage() {
                         flexDirection: 'column',
                         borderRadius: '5px',
                         padding: '16px',
-                        backgroundImage: 'url(../images/joystick-seamless.jpg)',
-                        backgroundRepeat: 'repeat', backgroundSize: '10%', backgroundBlendMode: 'multiply',
+                        backgroundImage: 'url(../images/bg/joystick-seamless.jpg)',
+                        backgroundRepeat: 'repeat', backgroundSize: '15%', backgroundBlendMode: 'multiply',
                     }}
                 >
-                    <MessageList messages={messageList} />
+                    <MessageList messages={messageList} user={userName} />
 
                     <Box
                         as="form"
@@ -178,13 +177,24 @@ export default function ChatPage() {
     )
 }
 
-function Header() {
+function Header(props) {
     return (
         <>
             <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
-                <Text variant='heading5'>
-                    Chat
-                </Text>
+                <Box styleSheet={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'start'
+                }} >
+                    <Image
+                        styleSheet={{
+                            width: '50px',
+                            height: '50px',
+                            borderRadius: '50%',
+                            marginRight: '8px',
+                        }}
+                        src={`https://github.com/${props.user}.png`}
+                    />
+                    <Text>{props.user}</Text>
+                </Box>
                 <Button
                     variant='tertiary'
                     colorVariant='neutral'
@@ -215,11 +225,12 @@ function MessageList(props) {
                     <Text
                         key={message.id}
                         tag="li"
+                        className={message.from === props.user ? 'my-message' : 'other-message'}
                         styleSheet={{
                             borderRadius: '10px',
                             padding: '10px',
                             marginBottom: '12px',
-                            fontSize: '14px',
+                            fontSize: '12px',
                             hover: {
                                 backgroundColor: appConfig.theme.colors.neutrals[700],
                             },
@@ -237,29 +248,27 @@ function MessageList(props) {
                                     width: '30px',
                                     height: '30px',
                                     borderRadius: '50%',
-                                    display: 'inline-block',
                                     marginRight: '8px',
                                 }}
                                 src={`https://github.com/${message.from}.png`}
                             />
-                            <Text tag="strong" styleSheet={{
-                                display: 'inline-block',
-                                fontSize: '10px',
-                                color: appConfig.theme.colors.primary[100]
-                            }}>
-                                {message.from}
-                            </Text>
-                            <Text
-                                styleSheet={{
-                                    fontSize: '8px',
-                                    marginLeft: '8px',
-                                    color: appConfig.theme.colors.neutrals[300],
-                                    display: 'inline-block',
-                                }}
-                                tag="span"
-                            >
-                                {new Date(message.created_at).toLocaleString()}
-                            </Text>
+                            <Box>
+                                <Text tag="strong" styleSheet={{
+                                    fontSize: '10px',
+                                    color: appConfig.theme.colors.primary[100]
+                                }}>
+                                    {message.from}
+                                </Text>
+                                <Text
+                                    styleSheet={{
+                                        fontSize: '8px',
+                                        color: appConfig.theme.colors.neutrals[300],
+                                    }}
+                                    tag="span"
+                                >
+                                    {new Date(message.created_at).toLocaleString()}
+                                </Text>
+                            </Box>
                         </Box>
                         {
                             message.message != undefined ? (
