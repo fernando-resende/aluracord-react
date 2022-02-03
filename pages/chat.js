@@ -2,6 +2,8 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import { supabase } from '../src/util/supabaseClient';
+import ChannelList from '../src/components/ChannelList';
+import Copyright from '../src/components/Copyright';
 import { StickerButton } from '../src/components/StickerButton';
 import { useRouter } from 'next/router';
 
@@ -9,6 +11,8 @@ export default function ChatPage() {
     const userName = useRouter().query.userName;
     const [message, setMessage] = React.useState('');
     const [messageList, setMessageList] = React.useState([]);
+
+    console.log(appConfig['ssbu-complete'].filter(e=>e.series.name==='Final Fantasy'));
 
     React.useEffect(() => {
         fetchMessages();
@@ -19,7 +23,7 @@ export default function ChatPage() {
                     ...currentListValue
                 ]
             })
-        })
+        });
     }, []);
 
     async function fetchMessages() {
@@ -86,92 +90,101 @@ export default function ChatPage() {
                     padding: '1rem',
                 }}
             >
+
                 <Header user={userName} />
 
-                <Box
-                    styleSheet={{
-                        position: 'relative',
-                        display: 'flex',
-                        flex: 1,
-                        height: '80%',
-                        backgroundColor: appConfig.theme.colors.neutrals[900],
-                        flexDirection: 'column',
-                        borderRadius: '5px',
-                        padding: '16px',
-                        backgroundImage: 'url(../images/bg/joystick-seamless.jpg)',
-                        backgroundRepeat: 'repeat', backgroundSize: '15%', backgroundBlendMode: 'multiply',
-                    }}
-                >
-                    <MessageList messages={messageList} user={userName} />
+                <Box styleSheet={{ display: 'flex',
+                            height: '90%', }}>
+                    <ChannelList styleSheet={{ display: 'flex' }} />
 
                     <Box
-                        as="form"
                         styleSheet={{
+                            position: 'relative',
                             display: 'flex',
-                            alignItems: 'center',
-                            backgroundColor: appConfig.theme.colors.neutrals[800],
+                            flex: 1,
+                            backgroundColor: appConfig.theme.colors.neutrals[900],
+                            flexDirection: 'column',
                             borderRadius: '5px',
-                            padding: '5px'
+                            padding: '16px',
+                            backgroundImage: `url(${appConfig.ssbu.series[0].icon})`,
+                            backgroundRepeat: 'no-repeat', backgroundSize: '50%', 
+                            backgroundBlendMode: 'multiply', backgroundPosition: 'center'
                         }}
                     >
-                        <TextField
-                            value={message}
-                            onChange={(event) => {
-                                const valor = event.target.value;
-                                setMessage(valor);
-                            }}
-                            onKeyPress={(event) => {
-                                if (event.key === 'Enter') {
-                                    event.preventDefault();
-                                    handleNewMessage(userName, message);
-                                }
-                            }}
-                            placeholder="Insira sua mensagem aqui..."
-                            type="textarea"
-                            styleSheet={{
-                                width: '100%',
-                                border: '0',
-                                resize: 'none',
-                                borderRadius: '5px',
-                                padding: '5px',
-                                marginRight: '5px',
-                                color: appConfig.theme.colors.neutrals[200],
-                            }}
-                        />
+                        <MessageList messages={messageList} user={userName} />
 
-                        <StickerButton
-                            onStickerClick={(sticker) => {
-                                handleNewMessage(userName, `sticker->${sticker}`);
-                            }}
-                        />
-
-                        <Button
-                            label=''
-                            iconName='arrowRight'
-                            title='Enviar'
-                            onClick={(event) => {
-                                handleNewMessage(userName, message);
-                                console.log(document.getElementsByTagName('textarea')[0].focus());
-                            }}
+                        <Box
+                            as="form"
                             styleSheet={{
-                                borderRadius: '50%',
-                                padding: '0 3px 0 0',
-                                marginLeft: '5px',
-                                minWidth: '50px',
-                                minHeight: '50px',
-                                fontSize: '20px',
-                                lineHeight: '0',
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundColor: appConfig.theme.colors.neutrals[300],
-                                hover: {
-                                    filter: 'grayscale(0)',
-                                }
+                                backgroundColor: appConfig.theme.colors.neutrals[800],
+                                borderRadius: '5px',
+                                padding: '5px'
                             }}
-                        />
+                        >
+                            <TextField
+                                value={message}
+                                onChange={(event) => {
+                                    const valor = event.target.value;
+                                    setMessage(valor);
+                                }}
+                                onKeyPress={(event) => {
+                                    if (event.key === 'Enter') {
+                                        event.preventDefault();
+                                        handleNewMessage(userName, message);
+                                    }
+                                }}
+                                placeholder="Insira sua mensagem aqui..."
+                                type="textarea"
+                                styleSheet={{
+                                    width: '100%',
+                                    border: '0',
+                                    resize: 'none',
+                                    borderRadius: '5px',
+                                    padding: '5px',
+                                    marginRight: '5px',
+                                    color: appConfig.theme.colors.neutrals[200],
+                                }}
+                            />
+
+                            <StickerButton
+                                onStickerClick={(sticker) => {
+                                    handleNewMessage(userName, `sticker->${sticker}`);
+                                }}
+                            />
+
+                            <Button
+                                label=''
+                                iconName='arrowRight'
+                                title='Enviar'
+                                onClick={(event) => {
+                                    handleNewMessage(userName, message);
+                                    console.log(document.getElementsByTagName('textarea')[0].focus());
+                                }}
+                                styleSheet={{
+                                    borderRadius: '50%',
+                                    padding: '0 3px 0 0',
+                                    marginLeft: '5px',
+                                    minWidth: '50px',
+                                    minHeight: '50px',
+                                    fontSize: '20px',
+                                    lineHeight: '0',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: appConfig.theme.colors.neutrals[300],
+                                    hover: {
+                                        filter: 'grayscale(0)',
+                                    }
+                                }}
+                            />
+                        </Box>
                     </Box>
                 </Box>
+
+            <Copyright />
+            
             </Box>
         </Box>
     )

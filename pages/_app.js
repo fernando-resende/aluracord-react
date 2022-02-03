@@ -42,7 +42,7 @@ function GlobalStyle() {
           flex: 25% !important;
         }
         .my-message{
-          background-color: rgba(200,200,150,0.3);
+          background-color: rgba(200,100,100,0.3);
           margin: 0 1rem 0 40%;
         }
         .other-message{
@@ -52,17 +52,18 @@ function GlobalStyle() {
         /* Scroll Bar */
         /* width */
         ::-webkit-scrollbar {
-          width: 10px;
+          width: 5px;
         }
 
         /* Track */
         ::-webkit-scrollbar-track {
-          background: #BBB;
+          background: transparent;
         }
-
+        
         /* Handle */
         ::-webkit-scrollbar-thumb {
-          background: #888;
+          border-radius: 10%;
+          background: #555;
         }
 
         /* Scroll Bar */
