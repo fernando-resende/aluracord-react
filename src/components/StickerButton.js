@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, Text, Image } from '@skynexui/components';
 import appConfig from '../../config.json';
 
-export function StickerButton(props) {
+export function StickerButton({ extaStickers = [], onStickerClick, ...props }) {
     const [isOpen, setOpenState] = React.useState('');
 
     return (
@@ -68,35 +68,50 @@ export function StickerButton(props) {
                             justifyContent: 'space-between',
                             flex: 1,
                             paddingTop: '16px',
-                            overflow: 'scroll',
+                            overflowY: 'scroll',
                         }}
                     >
-                        {appConfig.stickers.map((sticker) => (
-                            <Text
-                                onClick={() => {
-                                    if (Boolean(props.onStickerClick)) {
-                                        props.onStickerClick(sticker);
-                                    }
-                                }}
-                                tag="li" key={sticker}
-                                styleSheet={{
-                                    width: '50%',
-                                    borderRadius: '5px',
-                                    padding: '10px',
-                                    focus: {
-                                        backgroundColor: appConfig.theme.colors.neutrals[600],
-                                    },
-                                    hover: {
-                                        backgroundColor: appConfig.theme.colors.neutrals[600],
-                                    }
-                                }}
-                            >
-                                <Image src={sticker} />
-                            </Text>
+                        {extaStickers.map((extraSticker) =>
+                            <>
+                                <Sticker sticker={extraSticker.images.icon} onStickerClick={onStickerClick} />
+                                <Sticker sticker={extraSticker.images.portrait} onStickerClick={onStickerClick} />
+                            </>
+                        )}
+
+                        {appConfig.stickers.map((mainSticker) => (
+                            <Sticker sticker={mainSticker} onStickerClick={onStickerClick} />
                         ))}
                     </Box>
                 </Box>
             )}
         </Box>
+    )
+}
+
+function Sticker({ sticker, onStickerClick }) {
+    return (
+        <>
+            <Text
+                onClick={() => {
+                    if (Boolean(onStickerClick)) {
+                        onStickerClick(sticker);
+                    }
+                }}
+                tag="li" key={sticker}
+                styleSheet={{
+                    width: '50%',
+                    borderRadius: '5px',
+                    padding: '10px',
+                    focus: {
+                        backgroundColor: appConfig.theme.colors.neutrals[600],
+                    },
+                    hover: {
+                        backgroundColor: appConfig.theme.colors.neutrals[600],
+                    }
+                }}
+            >
+                <Image src={sticker} />
+            </Text>
+        </>
     )
 }

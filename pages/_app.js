@@ -62,7 +62,7 @@ function GlobalStyle() {
         
         /* Handle */
         ::-webkit-scrollbar-thumb {
-          border-radius: 10%;
+          border-radius: 150px;
           background: #555;
         }
 

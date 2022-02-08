@@ -2,32 +2,50 @@ import React from 'react';
 import { Box, Image } from '@skynexui/components';
 import appConfig from '../../config.json';
 
-export default function UserProfile(props) {
+export default function GitHubUserProfile({ userName, direction = 'column', pictureSize = '30%', showPicture = true, showStatsCard = true, showTopLanguagesCard = true, ...props }) {
+    const [isVisiblePicture, setisVisiblePicture] = React.useState(true);
+    const [isVisibleStatsCard, setisVisibleStatsCard] = React.useState(true);
+    const [isVisibleTopLanguagesCard, setisVisibleTopLanguagesCard] = React.useState(true);
+
     return (
         <>
             <Box styleSheet={{
                 display: 'flex',
+                flexDirection: direction,
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                flexWrap: 'wrap',
                 padding: '0.5rem',
             }}>
-                <Image
-                    styleSheet={{
-                        borderRadius: '50%',
-                        width: '30%',
-                        maxWidth: '10rem',
-                        border: `5px solid ${appConfig.theme.colors.primary['500']}`,
-                    }}
-                    src={`https://github.com/${props.userName}.png`}
-                />
-                <Box>
-                    {/* <Image
-                        src={`https://github-readme-stats.vercel.app/api?username=${props.userName}&theme=dark&show_icons=true&count_private=true`}
-                    /> */}
+                {showPicture &&
                     <Image
-                        src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${props.userName}&layout=compact&theme=dark`}
+                        styleSheet={{
+                            borderRadius: '50%',
+                            width: pictureSize,
+                            maxWidth: '10rem',
+                            border: `5px solid ${appConfig.theme.colors.primary['500']}`,
+                        }}
+                        src={`https://github.com/${userName}.png`}
                     />
-                </Box>
+                }
+
+                {showStatsCard &&
+                    <Image
+                    styleSheet={{
+                        width: '100%',
+                    }}
+                        src={`https://github-readme-stats.vercel.app/api?username=${userName}&theme=dark&show_icons=true&count_private=true`}
+                    />
+                }
+                {showTopLanguagesCard &&
+                    <Image
+                    styleSheet={{
+                        width: '100%',
+                    }}
+                        src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${userName}&layout=compact&theme=dark`}
+                    />
+                }
             </Box>
         </>
     );

@@ -1,21 +1,23 @@
-import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
+import { useRouter } from 'next/router';
 import appConfig from '../config.json';
 import { supabase } from '../src/util/supabaseClient';
-import ChannelList from '../src/components/ChannelList';
-import Copyright from '../src/components/Copyright';
+import { Box, Text, TextField, Icon, Image, Button } from '@skynexui/components';
 import { StickerButton } from '../src/components/StickerButton';
-import { useRouter } from 'next/router';
+import GitHubUserProfile from '../src/components/UserProfile';
+import Channels from '../src/components/ChannelList';
+import Copyright from '../src/components/Copyright';
+
+const SSB_GENERAL = 'Super Smash Bros.';
 
 export default function ChatPage() {
     const userName = useRouter().query.userName;
+    const [channel, setChannel] = React.useState(SSB_GENERAL);
     const [message, setMessage] = React.useState('');
     const [messageList, setMessageList] = React.useState([]);
 
-    console.log(appConfig['ssbu-complete'].filter(e=>e.series.name==='Final Fantasy'));
-
     React.useEffect(() => {
-        fetchMessages();
+        fetchMessages(channel);
         listenRealTimeMessages((newMessage) => {
             setMessageList((currentListValue) => {
                 return [
@@ -26,10 +28,11 @@ export default function ChatPage() {
         });
     }, []);
 
-    async function fetchMessages() {
+    async function fetchMessages(selectedChannel) {
         const { data } = await supabase
             .from('messages')
             .select('*')
+            .like('channel', selectedChannel)
             .order('id', { ascending: false });
         setMessageList(data);
     }
@@ -55,10 +58,11 @@ export default function ChatPage() {
     - [X] Lista de mensagens 
     */
 
-    function handleNewMessage(user, newMessage) {
+    function handleNewMessage(user, newMessage, selectedChannel) {
         let message = {
             from: user,
             message: newMessage,
+            channel: selectedChannel
         };
         supabase
             .from('messages')
@@ -71,149 +75,187 @@ export default function ChatPage() {
     return (
         <Box
             styleSheet={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                backgroundColor: appConfig.theme.colors.primary[500],
-                color: appConfig.theme.colors.neutrals['000'],
+                display: 'flex',
+                flexDirection: 'column',
+                flex: 1,
+                boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
+                backgroundColor: appConfig.theme.colors.neutrals[700],
+                height: '100%',
+                width: '100%',
+                padding: '1rem',
             }}
         >
-            <Box
-                styleSheet={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flex: 1,
-                    boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-                    borderRadius: '5px',
-                    backgroundColor: appConfig.theme.colors.neutrals[700],
-                    height: '100%',
-                    maxWidth: '95%',
-                    maxHeight: '95vh',
-                    padding: '1rem',
-                }}
-            >
 
-                <Header user={userName} />
+            <Header user={userName} channel={channel} />
 
-                <Box styleSheet={{ display: 'flex',
-                            height: '90%', }}>
-                    <ChannelList styleSheet={{ display: 'flex' }} />
+            <Box styleSheet={{
+                display: 'flex',
+                height: '90%',
+                marginBottom: '2rem',
+            }}>
+
+                <Channels
+                    channelName={channel}
+                    channelList={appConfig.ssbu.series}
+                    styleSheet={{
+                        display: 'flex'
+                    }}
+                    onChannelClick={(channel) => {
+                        setChannel(channel);
+                        fetchMessages(channel);
+                    }}
+                />
+
+                <Box
+                    styleSheet={{
+                        position: 'relative',
+                        display: 'flex',
+                        flex: 1,
+                        backgroundColor: appConfig.theme.colors.neutrals[900],
+                        flexDirection: 'column',
+                        padding: '16px',
+                        backgroundImage: `url(${appConfig.ssbu.series.filter(ch => ch.name === channel)[0].icon})`,
+                        backgroundRepeat: 'no-repeat', backgroundSize: '50%',
+                        backgroundBlendMode: 'multiply', backgroundPosition: 'center'
+                    }}
+                >
+                    <MessageList messages={messageList} user={userName} />
 
                     <Box
+                        as="form"
                         styleSheet={{
-                            position: 'relative',
                             display: 'flex',
-                            flex: 1,
-                            backgroundColor: appConfig.theme.colors.neutrals[900],
-                            flexDirection: 'column',
+                            alignItems: 'center',
+                            backgroundColor: appConfig.theme.colors.neutrals[800],
                             borderRadius: '5px',
-                            padding: '16px',
-                            backgroundImage: `url(${appConfig.ssbu.series[0].icon})`,
-                            backgroundRepeat: 'no-repeat', backgroundSize: '50%', 
-                            backgroundBlendMode: 'multiply', backgroundPosition: 'center'
+                            padding: '5px'
                         }}
                     >
-                        <MessageList messages={messageList} user={userName} />
-
-                        <Box
-                            as="form"
+                        <TextField
+                            value={message}
+                            onChange={(event) => {
+                                const valor = event.target.value;
+                                setMessage(valor);
+                            }}
+                            onKeyPress={(event) => {
+                                if (event.key === 'Enter') {
+                                    event.preventDefault();
+                                    handleNewMessage(userName, message, channel);
+                                }
+                            }}
+                            placeholder="Your message here..."
+                            type="textarea"
                             styleSheet={{
+                                width: '100%',
+                                border: '0',
+                                resize: 'none',
+                                borderRadius: '5px',
+                                padding: '5px',
+                                marginRight: '5px',
+                                color: appConfig.theme.colors.neutrals[200],
+                            }}
+                        />
+
+                        <StickerButton
+                            extaStickers={appConfig['ssbu-complete'].filter(e => e.series.name === channel)}
+                            onStickerClick={(sticker) => {
+                                handleNewMessage(userName, `sticker->${sticker}`, channel);
+                            }}
+                        />
+
+                        <Button
+                            label=''
+                            iconName='FaTelegramPlane'
+                            title='Send'
+                            onClick={(event) => {
+                                handleNewMessage(userName, message, channel);
+                                document.getElementsByTagName('textarea')[0].focus();
+                            }}
+                            styleSheet={{
+                                borderRadius: '50%',
+                                padding: '0 3px 0 0',
+                                marginLeft: '5px',
+                                minWidth: '50px',
+                                minHeight: '50px',
+                                fontSize: '20px',
+                                lineHeight: '0',
                                 display: 'flex',
                                 alignItems: 'center',
-                                backgroundColor: appConfig.theme.colors.neutrals[800],
-                                borderRadius: '5px',
-                                padding: '5px'
+                                justifyContent: 'center',
+                                backgroundColor: appConfig.theme.colors.neutrals[300],
+                                hover: {
+                                    filter: 'grayscale(0)',
+                                }
                             }}
-                        >
-                            <TextField
-                                value={message}
-                                onChange={(event) => {
-                                    const valor = event.target.value;
-                                    setMessage(valor);
-                                }}
-                                onKeyPress={(event) => {
-                                    if (event.key === 'Enter') {
-                                        event.preventDefault();
-                                        handleNewMessage(userName, message);
-                                    }
-                                }}
-                                placeholder="Insira sua mensagem aqui..."
-                                type="textarea"
-                                styleSheet={{
-                                    width: '100%',
-                                    border: '0',
-                                    resize: 'none',
-                                    borderRadius: '5px',
-                                    padding: '5px',
-                                    marginRight: '5px',
-                                    color: appConfig.theme.colors.neutrals[200],
-                                }}
-                            />
-
-                            <StickerButton
-                                onStickerClick={(sticker) => {
-                                    handleNewMessage(userName, `sticker->${sticker}`);
-                                }}
-                            />
-
-                            <Button
-                                label=''
-                                iconName='arrowRight'
-                                title='Enviar'
-                                onClick={(event) => {
-                                    handleNewMessage(userName, message);
-                                    console.log(document.getElementsByTagName('textarea')[0].focus());
-                                }}
-                                styleSheet={{
-                                    borderRadius: '50%',
-                                    padding: '0 3px 0 0',
-                                    marginLeft: '5px',
-                                    minWidth: '50px',
-                                    minHeight: '50px',
-                                    fontSize: '20px',
-                                    lineHeight: '0',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: appConfig.theme.colors.neutrals[300],
-                                    hover: {
-                                        filter: 'grayscale(0)',
-                                    }
-                                }}
-                            />
-                        </Box>
+                        />
                     </Box>
                 </Box>
+            </Box>
 
             <Copyright />
-            
-            </Box>
+
         </Box>
     )
 }
 
 function Header(props) {
+    const [isDropdownVisible, setIsDropdownVisible] = React.useState(false);
     return (
         <>
-            <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
+            <Box styleSheet={{ color: 'white', width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
+
+                {/* <Text>{props.user}</Text> */}
+                <Text styleSheet={{ textAlign: 'left' }}>
+                    {`${props.channel === SSB_GENERAL ? 'General' : 'Serie'} - ${props.channel}`}
+                </Text>
+
                 <Box styleSheet={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'start'
-                }} >
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'end',
+                    cursor: 'pointer',
+                }}
+
+                    onClick={() => {
+                        setIsDropdownVisible(!isDropdownVisible);
+                    }}
+                >
                     <Image
                         styleSheet={{
-                            width: '50px',
-                            height: '50px',
+                            width: '6%',
+                            minWidth: '50px',
                             borderRadius: '50%',
-                            marginRight: '8px',
                         }}
                         src={`https://github.com/${props.user}.png`}
                     />
-                    <Text>{props.user}</Text>
+                    <Icon
+                        label="Dropdown Icon"
+                        name="FaAngleDown"
+                    />
                 </Box>
-                <Button
-                    variant='tertiary'
-                    colorVariant='neutral'
-                    label='Logout'
-                    href="/"
-                />
+
+                {isDropdownVisible &&
+                    <Box styleSheet={{
+                        position: 'absolute',
+                        top: '4rem',
+                        right: '2rem',
+                        width: '30%',
+                        minWidth: '300px',
+                        maxWidth: '400px',
+                        backgroundColor: appConfig.theme.colors.neutrals[500],
+                        zIndex: '10',
+                    }}>
+                        <GitHubUserProfile userName={props.user} showPicture={false} />
+                        <Button
+                            variant='tertiary'
+                            colorVariant='neutral'
+                            label='Logout'
+                            href="/"
+                            fullWidth
+                        />
+                    </Box>
+                }
+
             </Box>
         </>
     )

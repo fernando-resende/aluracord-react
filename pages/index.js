@@ -1,7 +1,7 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
 import { useRouter } from 'next/router';
-import UserProfile from '../src/components/UserProfile';
+import GitHubUserProfile from '../src/components/UserProfile';
 import Copyright from '../src/components/Copyright';
 import appConfig from '../config.json';
 
@@ -43,6 +43,7 @@ export default function Home() {
                     styleSheet={{
                         display: 'flex',
                         alignItems: 'center',
+                        justifyContent: 'cnter',
                         flexDirection: 'column',
                         borderRadius: '25px',
                         padding: '1rem',
@@ -54,10 +55,10 @@ export default function Home() {
                 >
 
                     <Title tag="h3">
-                        Boas vindas de volta ao {appConfig.name}!
+                        Welcome back to the {appConfig.name}!
                     </Title>
 
-                    <UserProfile userName={userName} />
+                    <GitHubUserProfile userName={userName} direction='row' showStatsCard={false}/>
 
                     {/* Formulário */}
                     <Box
@@ -89,7 +90,7 @@ export default function Home() {
                                 },
                             }}
                             value={userName}
-                            placeholder='Usuário do Github'
+                            placeholder='Github user'
                             onChange={event => setUserName(event.target.value)}
                         />
 
