@@ -1,9 +1,9 @@
 # About / Sobre
-This project was built in the Alura's React immersion (jan/2022).
+This is a study project and was built in the Alura's React immersion (jan/2022).
 
 -------------------------------------------------
 
-Este projeto foi construído na imersão React da Alura (jan/2022).
+Este projeto de estudo e foi construído na imersão React da Alura (jan/2022).
 
 -------------------------------------------------
 

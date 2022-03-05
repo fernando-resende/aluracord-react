@@ -19,14 +19,20 @@ export default function ChatPage() {
     React.useEffect(() => {
         fetchMessages(channel);
         listenRealTimeMessages((newMessage) => {
-            setMessageList((currentListValue) => {
-                return [
-                    newMessage,
-                    ...currentListValue
-                ]
-            })
+            console.log("Current Channel: " + channel);
+            console.log("New Message Channel: " + newMessage.channel);
+            if (newMessage.channel === channel) {
+                console.log("In channel that received some message...");
+                setMessageList((currentListValue) => {
+                    return [
+                        newMessage,
+                        ...currentListValue
+                    ];
+
+                });
+            }
         });
-    }, []);
+    }, [channel]);
 
     async function fetchMessages(selectedChannel) {
         const { data } = await supabase
@@ -100,9 +106,11 @@ export default function ChatPage() {
                     styleSheet={{
                         display: 'flex'
                     }}
-                    onChannelClick={(channel) => {
-                        setChannel(channel);
-                        fetchMessages(channel);
+                    onChannelClick={(ch) => {
+                        console.log("Channel before set: ", channel);
+                        setChannel(ch);
+                        fetchMessages(ch);
+                        console.log("Channel after set: ", channel);
                     }}
                 />
 
@@ -262,7 +270,7 @@ function Header(props) {
 }
 
 function MessageList(props) {
-    // console.log(props);
+    console.log(props);
     return (
         <Box
             tag="ul"

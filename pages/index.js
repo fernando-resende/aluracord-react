@@ -97,7 +97,7 @@ export default function Home() {
 
                         <Button
                             type='submit'
-                            label='Entrar'
+                            label='Enter'
                             fullWidth
                             buttonColors={{
                                 contrastColor: appConfig.theme.colors.neutrals["000"],
