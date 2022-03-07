@@ -86,7 +86,7 @@ export default function ChatPage() {
                 flex: 1,
                 boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
                 backgroundColor: appConfig.theme.colors.neutrals[700],
-                height: '100%',
+                height: '100vh',
                 width: '100%',
                 padding: '1rem',
             }}
@@ -96,8 +96,7 @@ export default function ChatPage() {
 
             <Box styleSheet={{
                 display: 'flex',
-                height: '90%',
-                marginBottom: '2rem',
+                height: '80%',
             }}>
 
                 <Channels
@@ -200,7 +199,9 @@ export default function ChatPage() {
                 </Box>
             </Box>
 
-            <Copyright />
+            <Copyright styleSheet={{
+                height: '10%',
+            }} />
 
         </Box>
     )

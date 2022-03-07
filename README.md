@@ -25,6 +25,8 @@ Criar um chat em tempo real baseado no **Discord** usando usuários do github pa
 - [React](https://reactjs.org);
 - [NextJs](https://nextjs.org);
 - [Supabase](https://supabase.com);
+- [Skynexui](https://github.com/skynexui/components);
+- [Slick](https://kenwheeler.github.io/slick/).
 
 # Install / Instalação
 First of all, you'll need a project on [Supabase](https://supabase.com) with a table named as "**messages**" and the following fields: id (integer auto increment), created_at (timestamp default value now()), from (varchar), message (text) and channel (varchar), so follow the steps below:

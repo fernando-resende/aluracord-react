@@ -31,42 +31,53 @@ export default function Home() {
 
     return (
         <>
-            <Box>
+            <Box
+                styleSheet={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                }}
+            >
                 <Image
                     src='./images/bg/ssbu_fighters_wall.png'
                     styleSheet={{
-                        display: 'flex',
-                        width: '100%',
+                        position: 'absolute',
+                        maxWidth: 'none',
+                        height: '100%',
+                        position: 'fixed',
+                        zIndex: '-1',
+                        left: '-50%'
                     }}
                 />
+
                 <Box
                     styleSheet={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'cnter',
+                        justifyContent: 'center',
                         flexDirection: 'column',
                         borderRadius: '25px',
                         padding: '1rem',
-                        margin: '1rem',
-                        width: '95%',
+                        margin: '3rem 1rem 1rem',
+                        maxWidth: '400px',
                         boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-                        backgroundColor: appConfig.theme.colors.neutrals[700],
+                        backgroundColor: 'rgba(50, 50, 50, 0.7)',
                     }}
                 >
 
                     <Title tag="h3">
-                        Welcome back to the {appConfig.name}!
+                        Join us in {appConfig.name}!
                     </Title>
 
-                    <GitHubUserProfile userName={userName} direction='row' showStatsCard={false}/>
 
                     {/* Formulário */}
                     <Box
                         as="form"
                         method="post"
                         styleSheet={{
-                            display: 'flex', alignItems: 'start', justifyContent: 'center',
-                            width: { xs: '100%', sm: '80%' }, textAlign: 'center', marginBottom: '32px',
+                            display: 'flex', justifyContent: 'center', flexDirection: 'column',
+                            width: { xs: '100%', sm: '80%' }, textAlign: 'center',
                         }}
                         onSubmit={event => {
                             event.preventDefault();
@@ -90,6 +101,7 @@ export default function Home() {
                                 },
                             }}
                             value={userName}
+                            //label='Github user'
                             placeholder='Github user'
                             onChange={event => setUserName(event.target.value)}
                         />
@@ -111,6 +123,8 @@ export default function Home() {
                         />
                     </Box>
                     {/* Formulário */}
+
+                    <GitHubUserProfile userName={userName} direction='row' showStatsCard={false} />
 
                 </Box>
 

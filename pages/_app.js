@@ -9,6 +9,7 @@ function GlobalStyle() {
           padding: 0;
           box-sizing: border-box;
           list-style: none;
+          font-size: 12px !important;
         }
         body {
           font-family: 'Press Start 2P', cursive;
@@ -24,6 +25,7 @@ function GlobalStyle() {
           min-height: 100vh;
           display: flex;
           flex: 1;
+          overflow: hidden;
         }
         #__next {
           flex: 1;

@@ -7,7 +7,8 @@ export default function Copyright() {
               small{
                   color: white;
                   display: block;
-                  font-size: 0.5rem;
+                  font-size: 0.5rem !important;
+                  text-shadow: 2px 2px #333;
               }
               `}
               </style>
